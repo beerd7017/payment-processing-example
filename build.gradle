@@ -1,0 +1,28 @@
+plugins {
+    id "java"
+}
+
+group 'com.dennis-stepp'
+version '1.0-SNAPSHOT'
+sourceCompatibility = 1.9
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    compile group: 'net.authorize', name: 'anet-java-sdk', version: '1.9.5'
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+loadConfiguration()
+
+def loadConfiguration() {
+    def environment = project.hasProperty('env') ? project.env : 'dev'
+    project.ext.set 'environment', environment
+    println "Environment is set to $environment"
+
+    def configFile = file('config.groovy')
+    def config = new ConfigSlurper(environment).parse(configFile.toURI().toURL())
+    project.ext.set 'config', config
+}
